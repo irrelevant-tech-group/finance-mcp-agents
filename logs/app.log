@@ -1,0 +1,64 @@
+2025-05-02 16:27:07,439 - finance-ai - INFO - Creating Pinecone index: finance-ai-index
+2025-05-02 16:27:08,875 - finance-ai - ERROR - Error generating embedding: 'Anthropic' object has no attribute 'embeddings'
+2025-05-02 16:29:43,791 - finance-ai - INFO - Creating Pinecone index: finance-ai-index
+2025-05-02 16:29:45,057 - finance-ai - ERROR - Error setting up Pinecone index: (400)
+Reason: Bad Request
+HTTP response headers: HTTPHeaderDict({'content-type': 'text/plain; charset=utf-8', 'access-control-allow-origin': '*', 'vary': 'origin,access-control-request-method,access-control-request-headers', 'access-control-expose-headers': '*', 'x-pinecone-api-version': '2025-01', 'x-cloud-trace-context': '3c9150339fc84bf2b99e18d863063ed5', 'date': 'Fri, 02 May 2025 21:29:44 GMT', 'server': 'Google Frontend', 'Content-Length': '202', 'Via': '1.1 google', 'Alt-Svc': 'h3=":443"; ma=2592000,h3-29=":443"; ma=2592000'})
+HTTP response body: {"error":{"code":"INVALID_ARGUMENT","message":"Bad request: Your free plan does not support indexes in the us-central1 region of gcp. To create indexes in this region, upgrade your plan."},"status":400}
+
+2025-05-02 16:29:45,276 - finance-ai - INFO - Generando embedding simulado (la API real puede no estar disponible)
+2025-05-02 16:31:33,291 - finance-ai - INFO - Creating Pinecone serverless index: finance-ai-index
+2025-05-02 16:31:33,291 - finance-ai - ERROR - Error setting up Pinecone index: __init__() missing 2 required positional arguments: 'cloud' and 'region'
+2025-05-02 16:31:33,501 - finance-ai - WARNING - No se pudo usar la API de Anthropic para embeddings: 'Anthropic' object has no attribute 'embed'
+2025-05-02 16:31:33,502 - finance-ai - INFO - Generando embedding simulado
+2025-05-02 16:33:00,008 - finance-ai - INFO - Creating Pinecone serverless index: finance-ai-index
+2025-05-02 16:33:07,504 - finance-ai - INFO - Created Pinecone serverless index: finance-ai-index
+2025-05-02 16:33:08,278 - finance-ai - INFO - Generando embedding simulado para uso de prueba
+2025-05-02 16:49:20,146 - finance-ai - ERROR - Error in setup: {'statusCode': 403, 'error': Unauthorized, 'message': new row violates row-level security policy}
+2025-05-02 16:49:33,590 - finance-ai - ERROR - Error analyzing financial query: Extra data: line 8 column 1 (char 117)
+2025-05-02 16:49:47,611 - finance-ai - INFO - CLI iniciada y saludando a usuario
+2025-05-02 16:54:23,672 - finance-ai - INFO - Pinecone index finance-ai-index already exists
+2025-05-02 16:55:47,780 - finance-ai - ERROR - Error creating transaction: 1 validation error for TransactionCreate
+tags
+  Input should be a valid dictionary [type=dict_type, input_value=[], input_type=list]
+    For further information visit https://errors.pydantic.dev/2.11/v/dict_type
+2025-05-02 16:55:47,781 - finance-ai - ERROR - Error creating transaction from text: 1 validation error for TransactionCreate
+tags
+  Input should be a valid dictionary [type=dict_type, input_value=[], input_type=list]
+    For further information visit https://errors.pydantic.dev/2.11/v/dict_type
+2025-05-02 16:56:16,493 - finance-ai - INFO - Generando embedding simulado para uso de prueba
+2025-05-02 17:04:02,370 - finance-ai - INFO - Generando embedding simulado para uso de prueba
+2025-05-02 17:04:04,424 - finance-ai - ERROR - Error processing query: 'datetime.datetime' object is not subscriptable
+2025-05-02 17:04:15,362 - finance-ai - INFO - Generando embedding simulado para uso de prueba
+2025-05-02 17:04:16,677 - finance-ai - ERROR - Error processing query: 'datetime.datetime' object is not subscriptable
+2025-05-02 17:06:03,008 - finance-ai - INFO - Generando embedding simulado para uso de prueba
+2025-05-02 17:06:06,105 - finance-ai - ERROR - Error processing query: 'datetime.datetime' object is not subscriptable
+2025-05-02 17:17:42,578 - finance-ai - INFO - Generando embedding simulado para uso de prueba
+2025-05-02 17:17:43,773 - finance-ai - ERROR - Error processing query: 'datetime.datetime' object is not subscriptable
+2025-05-02 17:18:28,250 - finance-ai - INFO - Pinecone index finance-ai-index already exists
+2025-05-02 17:18:39,176 - finance-ai - INFO - Generando embedding simulado para uso de prueba
+2025-05-02 17:18:40,829 - finance-ai - ERROR - Error processing query: 'datetime.datetime' object is not subscriptable
+2025-05-02 17:19:12,168 - finance-ai - ERROR - Error creating transaction: 1 validation error for TransactionCreate
+date
+  Field required [type=missing, input_value={'type': 'expense', 'amou...tegory': 'Food & Drink'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+2025-05-02 17:19:12,169 - finance-ai - ERROR - Error creating transaction from text: 1 validation error for TransactionCreate
+date
+  Field required [type=missing, input_value={'type': 'expense', 'amou...tegory': 'Food & Drink'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+2025-05-02 17:19:23,138 - finance-ai - INFO - Generando embedding simulado para uso de prueba
+2025-05-02 17:19:25,877 - finance-ai - ERROR - Error processing query: 'datetime.datetime' object is not subscriptable
+2025-05-02 17:19:34,793 - finance-ai - INFO - Generando embedding simulado para uso de prueba
+2025-05-03 15:33:01,617 - finance-ai - INFO - Generando embedding simulado para uso de prueba
+2025-05-03 15:33:30,916 - finance-ai - INFO - Generando embedding simulado para uso de prueba
+2025-05-03 15:33:50,200 - finance-ai - ERROR - Exception when creating transaction: Object of type UUID is not JSON serializable
+2025-05-03 15:33:50,200 - finance-ai - ERROR - Error creating transaction: Object of type UUID is not JSON serializable
+2025-05-03 15:33:50,200 - finance-ai - ERROR - Error creating transaction from text: Object of type UUID is not JSON serializable
+2025-05-03 15:34:01,861 - finance-ai - ERROR - Exception when creating transaction: Object of type UUID is not JSON serializable
+2025-05-03 15:34:01,866 - finance-ai - ERROR - Error creating transaction: Object of type UUID is not JSON serializable
+2025-05-03 15:34:01,866 - finance-ai - ERROR - Error creating transaction from text: Object of type UUID is not JSON serializable
+2025-05-03 15:34:12,513 - finance-ai - INFO - Generando embedding simulado para uso de prueba
+2025-05-03 15:34:27,616 - finance-ai - INFO - Generando embedding simulado para uso de prueba
+2025-05-03 15:35:22,381 - finance-ai - INFO - Generando embedding simulado para uso de prueba
+2025-05-03 15:35:39,304 - finance-ai - INFO - Generando embedding simulado para uso de prueba
+2025-05-03 15:35:51,603 - finance-ai - INFO - Generando embedding simulado para uso de prueba
