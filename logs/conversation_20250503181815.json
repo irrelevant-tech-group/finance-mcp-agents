@@ -1,0 +1,20 @@
+{
+  "session_id": "20250503181815",
+  "history": [
+    {
+      "role": "user",
+      "content": "¿Cuáles son mis mayores gastos?",
+      "timestamp": "2025-05-03T18:18:15.308309",
+      "metadata": {}
+    },
+    {
+      "role": "assistant",
+      "content": "Error: 'AIEngine' object has no attribute 'analyze_financial_query'",
+      "timestamp": "2025-05-03T18:18:15.318722",
+      "metadata": {
+        "error": true
+      }
+    }
+  ],
+  "updated_at": "2025-05-03T18:18:15.319720"
+}

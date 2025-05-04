@@ -1,0 +1,22 @@
+{
+  "session_id": "20250503182432",
+  "history": [
+    {
+      "role": "user",
+      "content": "Registra un gasto de  en software pagado ayer",
+      "timestamp": "2025-05-03T18:24:32.177093",
+      "metadata": {}
+    },
+    {
+      "role": "assistant",
+      "content": "✓ Created expense of USD 500 for software",
+      "timestamp": "2025-05-03T18:24:35.978166",
+      "metadata": {
+        "transaction_id": "e1499563-43d3-429d-b988-a15696bad96e",
+        "transaction_type": "expense",
+        "intent": "transaction_create"
+      }
+    }
+  ],
+  "updated_at": "2025-05-03T18:24:35.978166"
+}

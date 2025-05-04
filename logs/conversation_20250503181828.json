@@ -1,0 +1,20 @@
+{
+  "session_id": "20250503181828",
+  "history": [
+    {
+      "role": "user",
+      "content": "¿Y en qué categoría gasto más?",
+      "timestamp": "2025-05-03T18:18:28.513529",
+      "metadata": {}
+    },
+    {
+      "role": "assistant",
+      "content": "Error: 'AIEngine' object has no attribute 'analyze_financial_query'",
+      "timestamp": "2025-05-03T18:18:28.525574",
+      "metadata": {
+        "error": true
+      }
+    }
+  ],
+  "updated_at": "2025-05-03T18:18:28.525574"
+}

@@ -1,0 +1,21 @@
+{
+  "session_id": "20250503185850",
+  "history": [
+    {
+      "role": "user",
+      "content": "¿Cuáles son mis mayores gastos?",
+      "timestamp": "2025-05-03T18:58:50.925799",
+      "metadata": {}
+    },
+    {
+      "role": "assistant",
+      "content": "Análisis de Categorías (expense):\nSoftware: 1150.00 (100.0%)\n\nThis category financial report covers a 3-month period from February to May 2025 and focuses on expense transactions. The total expenses during this period were $1,150, with 100% of that amount going towards software-related costs. This indicates that the company is heavily invested in software and technology, which may be a strategic priority or a necessary cost of doing business. While the report does not provide context on the specific software expenses, the high concentration in a single category is worth further investigation to ensure these costs are aligned with the company's objectives and growth plans.",
+      "timestamp": "2025-05-03T18:58:54.447561",
+      "metadata": {
+        "intent": "financial_analysis",
+        "analysis_type": "category"
+      }
+    }
+  ],
+  "updated_at": "2025-05-03T18:58:54.447561"
+}

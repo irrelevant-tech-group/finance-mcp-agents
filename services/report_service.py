@@ -27,6 +27,8 @@ class ReportService:
                 - 'category': Category analysis
                 - 'runway': Runway and burn rate analysis
                 - 'comparison': Month-over-month comparison
+                - 'expenses': Top expense analysis
+                - 'top_expenses': Top expense analysis (alias)
             period_start: Start date for the report
             period_end: End date for the report
             parameters: Additional parameters for the report
@@ -48,7 +50,24 @@ class ReportService:
             
             report_data = {}
             
-            # Generate appropriate report based on type
+            # Normalize report_type to handle case variations and synonyms
+            report_type_lower = report_type.lower()
+            
+            # Map similar terms to standard report types
+            if report_type_lower in ['summary', 'resumen', 'overview']:
+                report_type = 'summary'
+            elif report_type_lower in ['cashflow', 'cash', 'flujo', 'flujo_de_caja', 'cash_flow']:
+                report_type = 'cashflow'
+            elif report_type_lower in ['category', 'categorías', 'categorias', 'categories']:
+                report_type = 'category'
+            elif report_type_lower in ['runway', 'burn', 'quema', 'duracion']:
+                report_type = 'runway'
+            elif report_type_lower in ['comparison', 'compare', 'comparacion', 'comparación', 'monthly']:
+                report_type = 'comparison'
+            elif report_type_lower in ['expenses', 'expense', 'gastos', 'gasto', 'spending', 'costs', 'top_expenses']:
+                report_type = 'expenses'
+            
+            # Generate appropriate report based on normalized type
             if report_type == 'summary':
                 report_data = self._generate_summary_report(period_start, period_end)
             elif report_type == 'cashflow':
@@ -59,6 +78,14 @@ class ReportService:
                     period_start=period_start,
                     period_end=period_end,
                     transaction_type=transaction_type
+                )
+            elif report_type == 'expenses':
+                # Use the specialized top expenses function
+                limit = parameters.get('limit', 5)
+                report_data = self.financial_analyzer.get_top_expenses(
+                    period_start=period_start,
+                    period_end=period_end,
+                    limit=limit
                 )
             elif report_type == 'runway':
                 months_back = parameters.get('months_back', 3)
@@ -75,9 +102,10 @@ class ReportService:
                     include_current_month=include_current
                 )
             else:
-                return {
-                    'error': f"Unknown report type: {report_type}"
-                }
+                # Fallback to summary report with warning
+                logger.warning(f"Unknown report type '{report_type}', defaulting to summary")
+                report_data = self._generate_summary_report(period_start, period_end)
+                report_data['warning'] = f"Unknown report type: {report_type}. Showing summary report instead."
             
             # Add metadata to the report
             report_data.update({
@@ -112,7 +140,9 @@ class ReportService:
             
             if not transactions:
                 return {
-                    'error': 'No transaction data available for the selected period'
+                    'error': 'No transaction data available for the selected period',
+                    'message': 'No hay datos de transacciones disponibles para el período seleccionado.',
+                    'suggestion': 'Intenta agregar algunas transacciones primero o selecciona un período diferente.'
                 }
             
             # Convert to DataFrame for easier analysis
@@ -176,7 +206,9 @@ class ReportService:
             
             if not transactions:
                 return {
-                    'error': 'No transaction data available for the selected period'
+                    'error': 'No transaction data available for the selected period',
+                    'message': 'No hay datos de transacciones disponibles para el período seleccionado.',
+                    'suggestion': 'Intenta agregar algunas transacciones primero o selecciona un período diferente.'
                 }
             
             # Convert to DataFrame for easier analysis

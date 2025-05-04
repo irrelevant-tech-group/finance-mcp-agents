@@ -1,0 +1,20 @@
+{
+  "session_id": "20250503183946",
+  "history": [
+    {
+      "role": "user",
+      "content": "Registra un gasto de  en software pagado ayer",
+      "timestamp": "2025-05-03T18:39:46.356337",
+      "metadata": {}
+    },
+    {
+      "role": "assistant",
+      "content": "De acuerdo, vamos a registrar el gasto de software que mencionaste. Para proceder de manera efectiva, necesito algunos detalles adicionales:\n\n1. ¿Cuál es el monto exacto del gasto en software que se registró ayer?\n\n2. ¿Podrías compartir más información sobre el tipo de software adquirido? Por ejemplo, si es una suscripción a una herramienta de productividad, una licencia de software especializado, etc.\n\n3. ¿Este gasto en software es recurrente (mensual, anual, etc.) o se trata de una compra única?\n\n4. ¿Cómo se realizó el pago? ¿Fue con tarjeta de crédito, transferencia bancaria, etc.?\n\nCon estos detalles, podré registrar el gasto de manera apropiada en los registros financieros de tu startup. Esto nos ayudará a mantener una contabilidad precisa y facilitar el análisis y la toma de decisiones en el futuro. Por favor, comparte la información que puedas y estaré encantado de ayudarte a registrar este gasto.",
+      "timestamp": "2025-05-03T18:39:50.522385",
+      "metadata": {
+        "intent": "general_query"
+      }
+    }
+  ],
+  "updated_at": "2025-05-03T18:39:50.522385"
+}

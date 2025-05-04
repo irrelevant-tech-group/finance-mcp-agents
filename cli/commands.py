@@ -7,6 +7,7 @@ from typing import Optional, List
 from datetime import datetime
 
 from core.ai_engine import AIEngine
+from core.conversation_memory import ConversationMemory
 from services.transaction_service import TransactionService
 from services.document_service import DocumentService
 from services.search_service import SearchService
@@ -18,22 +19,43 @@ from config.logging import logger
 console = Console()
 app = typer.Typer(help="Sistema de Gestión Financiera con IA para Startups")
 
+# Inicializar memoria de conversación como variable global
+conversation_memory = ConversationMemory()
+
 @app.command()
 def query(
     text: str = typer.Argument(..., help="Consulta en lenguaje natural"),
-    file: Optional[typer.FileText] = typer.Option(None, help="Archivo adjunto (opcional)")
+    file: Optional[typer.FileText] = typer.Option(None, help="Archivo adjunto (opcional)"),
+    reset_memory: bool = typer.Option(False, help="Reiniciar memoria de conversación")
 ):
     """
     Procesa consultas en lenguaje natural o comandos para el sistema financiero
     """
+    global conversation_memory
+    
+    # Reiniciar memoria si se solicita
+    if reset_memory:
+        conversation_memory = ConversationMemory()
+        console.print("[yellow]Memoria de conversación reiniciada[/yellow]")
+    
     console.print(f"[bold]Procesando:[/bold] {text}")
+    
+    # Añadir query del usuario a la memoria
+    conversation_memory.add("user", text)
     
     try:
         # Initialize AI engine to analyze the query
         ai_engine = AIEngine()
+        
+        # Obtener contexto de conversaciones previas
+        conversation_context = conversation_memory.get_context_for_llm(3)
+        
+        # Analizar la consulta teniendo en cuenta el contexto
         analysis = ai_engine.analyze_financial_query(text)
         intent = analysis.get('intent', 'general_query')
         parameters = analysis.get('parameters', {})
+        
+        logger.info(f"Intent detectado: {intent}, parámetros: {parameters}")
         
         # Process query based on intent
         if intent == 'transaction_create':
@@ -42,10 +64,22 @@ def query(
             result = transaction_service.create_from_text(text)
             
             if result.get('success', False):
-                console.print(f"[bold green]✓[/bold green] {result['message']}")
+                response_message = f"✓ {result['message']}"
+                console.print(f"[bold green]{response_message}[/bold green]")
                 _display_transaction(result['transaction'])
+                
+                # Añadir respuesta a la memoria
+                conversation_memory.add("assistant", response_message, {
+                    "transaction_id": str(result['transaction'].id),
+                    "transaction_type": result['transaction'].type,
+                    "intent": intent
+                })
             else:
-                console.print(f"[bold red]Error:[/bold red] {result.get('error', 'Unknown error')}")
+                error_message = f"Error: {result.get('error', 'Unknown error')}"
+                console.print(f"[bold red]{error_message}[/bold red]")
+                
+                # Añadir error a la memoria
+                conversation_memory.add("assistant", error_message, {"intent": intent, "error": True})
         
         elif intent == 'document_process' and file:
             # Process an uploaded document
@@ -53,8 +87,16 @@ def query(
             result = document_service.process_document(file, os.path.basename(file.name))
             
             if result.get('success', False):
-                console.print(f"[bold green]✓[/bold green] {result['message']}")
+                response_message = f"✓ {result['message']}"
+                console.print(f"[bold green]{response_message}[/bold green]")
                 _display_document(result['document'])
+                
+                # Añadir respuesta a la memoria
+                response_data = {
+                    "document_id": str(result['document'].id),
+                    "document_type": result['document'].type,
+                    "intent": intent
+                }
                 
                 if result.get('transaction_id'):
                     console.print("[bold]Transacción generada automáticamente:[/bold]")
@@ -62,8 +104,16 @@ def query(
                     transaction = transaction_service.get(result['transaction_id'])
                     if transaction:
                         _display_transaction(transaction)
+                        response_data["transaction_id"] = str(transaction.id)
+                        response_data["transaction_type"] = transaction.type
+                
+                conversation_memory.add("assistant", response_message, response_data)
             else:
-                console.print(f"[bold red]Error:[/bold red] {result.get('error', 'Error procesando documento')}")
+                error_message = f"Error: {result.get('error', 'Error procesando documento')}"
+                console.print(f"[bold red]{error_message}[/bold red]")
+                
+                # Añadir error a la memoria
+                conversation_memory.add("assistant", error_message, {"intent": intent, "error": True})
         
         elif intent == 'transaction_search' or intent == 'transaction_list':
             # Search or list transactions
@@ -71,10 +121,15 @@ def query(
             results = search_service.search(text, search_type='transactions')
             
             if 'error' in results:
-                console.print(f"[bold red]Error:[/bold red] {results['error']}")
+                error_message = f"Error: {results['error']}"
+                console.print(f"[bold red]{error_message}[/bold red]")
+                
+                # Añadir error a la memoria
+                conversation_memory.add("assistant", error_message, {"intent": intent, "error": True})
             else:
                 transactions = results.get('transactions', [])
-                console.print(f"[bold]Resultados de búsqueda:[/bold] {len(transactions)} transacciones encontradas")
+                response_message = f"Resultados de búsqueda: {len(transactions)} transacciones encontradas"
+                console.print(f"[bold]{response_message}[/bold]")
                 
                 if transactions:
                     table = Table(show_header=True, header_style="bold magenta")
@@ -100,6 +155,14 @@ def query(
                     
                     if 'explanation' in results:
                         console.print(Panel(results['explanation'], title="Análisis", border_style="blue"))
+                        response_message += f"\n{results['explanation']}"
+                
+                # Añadir respuesta a la memoria
+                conversation_memory.add("assistant", response_message, {
+                    "intent": intent,
+                    "transaction_count": len(transactions),
+                    "search_explanation": results.get('explanation', '')
+                })
         
         elif intent == 'financial_analysis':
             # Perform financial analysis
@@ -111,19 +174,40 @@ def query(
                 
                 if 'error' in result:
                     if 'message' in result:
-                        console.print(f"[yellow]Nota:[/yellow] {result['message']}")
+                        message = f"Nota: {result['message']}"
+                        console.print(f"[yellow]{message}[/yellow]")
                         if 'suggestion' in result:
-                            console.print(f"[yellow]Sugerencia:[/yellow] {result['suggestion']}")
+                            suggestion = f"Sugerencia: {result['suggestion']}"
+                            console.print(f"[yellow]{suggestion}[/yellow]")
+                            message += f"\n{suggestion}"
+                        
+                        # Añadir mensaje a la memoria
+                        conversation_memory.add("assistant", message, {"intent": intent, "warning": True})
                     else:
-                        console.print(f"[bold red]Error:[/bold red] {result['error']}")
+                        error_message = f"Error: {result['error']}"
+                        console.print(f"[bold red]{error_message}[/bold red]")
+                        
+                        # Añadir error a la memoria
+                        conversation_memory.add("assistant", error_message, {"intent": intent, "error": True})
                 else:
                     console.print(f"[bold]Análisis de Runway:[/bold]")
                     console.print(f"Balance actual: {result['cash_balance']:.2f}")
                     console.print(f"Tasa promedio de quema mensual: {result['avg_monthly_burn_rate']:.2f}")
                     console.print(f"Runway: {result['runway_status']}")
                     
+                    response_message = (
+                        f"Análisis de Runway:\n"
+                        f"Balance actual: {result['cash_balance']:.2f}\n"
+                        f"Tasa promedio de quema mensual: {result['avg_monthly_burn_rate']:.2f}\n"
+                        f"Runway: {result['runway_status']}"
+                    )
+                    
                     if 'summary' in result:
                         console.print(Panel(result['summary'], title="Resumen", border_style="blue"))
+                        response_message += f"\n\n{result['summary']}"
+                    
+                    # Añadir respuesta a la memoria
+                    conversation_memory.add("assistant", response_message, {"intent": intent, "analysis_type": "runway"})
             
             elif analysis_type == 'categories':
                 report_service = ReportService()
@@ -132,14 +216,26 @@ def query(
                 
                 if 'error' in result:
                     if 'message' in result:
-                        console.print(f"[yellow]Nota:[/yellow] {result['message']}")
+                        message = f"Nota: {result['message']}"
+                        console.print(f"[yellow]{message}[/yellow]")
                         if 'suggestion' in result:
-                            console.print(f"[yellow]Sugerencia:[/yellow] {result['suggestion']}")
+                            suggestion = f"Sugerencia: {result['suggestion']}"
+                            console.print(f"[yellow]{suggestion}[/yellow]")
+                            message += f"\n{suggestion}"
+                        
+                        # Añadir mensaje a la memoria
+                        conversation_memory.add("assistant", message, {"intent": intent, "warning": True})
                     else:
-                        console.print(f"[bold red]Error:[/bold red] {result['error']}")
+                        error_message = f"Error: {result['error']}"
+                        console.print(f"[bold red]{error_message}[/bold red]")
+                        
+                        # Añadir error a la memoria
+                        conversation_memory.add("assistant", error_message, {"intent": intent, "error": True})
                 else:
                     categories = result.get('categories', [])
                     console.print(f"[bold]Análisis de Categorías ({tx_type}):[/bold]")
+                    
+                    response_message = f"Análisis de Categorías ({tx_type}):"
                     
                     if categories:
                         table = Table(show_header=True, header_style="bold magenta")
@@ -153,14 +249,79 @@ def query(
                                 f"{cat['amount']:.2f}",
                                 f"{cat['percentage']:.1f}%"
                             )
+                            
+                            response_message += f"\n{cat['category']}: {cat['amount']:.2f} ({cat['percentage']:.1f}%)"
                         
                         console.print(table)
                     
                     if 'summary' in result:
                         console.print(Panel(result['summary'], title="Resumen", border_style="blue"))
+                        response_message += f"\n\n{result['summary']}"
+                    
+                    # Añadir respuesta a la memoria
+                    conversation_memory.add("assistant", response_message, {"intent": intent, "analysis_type": "categories"})
+            
+            elif analysis_type == 'category' or analysis_type == 'expenses':
+                report_service = ReportService()
+                # Por defecto, analizamos gastos cuando se solicita análisis de categorías
+                tx_type = parameters.get('transaction_type', 'expense')
+                # Si se solicita análisis de gastos específicamente, usamos el tipo 'expenses'
+                report_type = 'expenses' if analysis_type == 'expenses' else 'category'
+                result = report_service.generate_report(report_type, parameters={'transaction_type': tx_type})
+                
+                if 'error' in result:
+                    if 'message' in result:
+                        message = f"Nota: {result['message']}"
+                        console.print(f"[yellow]{message}[/yellow]")
+                        if 'suggestion' in result:
+                            suggestion = f"Sugerencia: {result['suggestion']}"
+                            console.print(f"[yellow]{suggestion}[/yellow]")
+                            message += f"\n{suggestion}"
+                        
+                        # Añadir mensaje a la memoria
+                        conversation_memory.add("assistant", message, {"intent": intent, "warning": True})
+                    else:
+                        error_message = f"Error: {result['error']}"
+                        console.print(f"[bold red]{error_message}[/bold red]")
+                        
+                        # Añadir error a la memoria
+                        conversation_memory.add("assistant", error_message, {"intent": intent, "error": True})
+                else:
+                    categories = result.get('categories', [])
+                    console.print(f"[bold]Análisis de {'Gastos' if report_type == 'expenses' else 'Categorías'} ({tx_type}):[/bold]")
+                    
+                    response_message = f"Análisis de {'Gastos' if report_type == 'expenses' else 'Categorías'} ({tx_type}):"
+                    
+                    if categories:
+                        table = Table(show_header=True, header_style="bold magenta")
+                        table.add_column("Categoría")
+                        table.add_column("Monto", justify="right")
+                        table.add_column("Porcentaje", justify="right")
+                        
+                        for cat in categories:
+                            table.add_row(
+                                cat['category'],
+                                f"{cat['amount']:.2f}",
+                                f"{cat['percentage']:.1f}%"
+                            )
+                            
+                            response_message += f"\n{cat['category']}: {cat['amount']:.2f} ({cat['percentage']:.1f}%)"
+                        
+                        console.print(table)
+                    
+                    if 'summary' in result:
+                        console.print(Panel(result['summary'], title="Resumen", border_style="blue"))
+                        response_message += f"\n\n{result['summary']}"
+                    
+                    # Añadir respuesta a la memoria
+                    conversation_memory.add("assistant", response_message, {"intent": intent, "analysis_type": analysis_type})
             
             else:
-                console.print(f"[yellow]Tipo de análisis no reconocido:[/yellow] {analysis_type}")
+                message = f"Tipo de análisis no reconocido: {analysis_type}"
+                console.print(f"[yellow]{message}[/yellow]")
+                
+                # Añadir mensaje a la memoria
+                conversation_memory.add("assistant", message, {"intent": intent, "warning": True})
         
         elif intent == 'report_generate':
             # Generate a report
@@ -170,18 +331,36 @@ def query(
             
             if 'error' in result:
                 if 'message' in result:
-                    console.print(f"[yellow]Nota:[/yellow] {result['message']}")
+                    message = f"Nota: {result['message']}"
+                    console.print(f"[yellow]{message}[/yellow]")
                     if 'suggestion' in result:
-                        console.print(f"[yellow]Sugerencia:[/yellow] {result['suggestion']}")
+                        suggestion = f"Sugerencia: {result['suggestion']}"
+                        console.print(f"[yellow]{suggestion}[/yellow]")
+                        message += f"\n{suggestion}"
+                    
+                    # Añadir mensaje a la memoria
+                    conversation_memory.add("assistant", message, {"intent": intent, "warning": True})
                 else:
-                    console.print(f"[bold red]Error:[/bold red] {result['error']}")
+                    error_message = f"Error: {result['error']}"
+                    console.print(f"[bold red]{error_message}[/bold red]")
+                    
+                    # Añadir error a la memoria
+                    conversation_memory.add("assistant", error_message, {"intent": intent, "error": True})
             else:
                 console.print(f"[bold]Reporte {report_type.capitalize()}:[/bold]")
+                
+                response_message = f"Reporte {report_type.capitalize()}:"
                 
                 if report_type == 'summary':
                     console.print(f"Ingresos totales: {result['income']:.2f}")
                     console.print(f"Gastos totales: {result['expenses']:.2f}")
                     console.print(f"Neto: {result['net']:.2f}")
+                    
+                    response_message += (
+                        f"\nIngresos totales: {result['income']:.2f}\n"
+                        f"Gastos totales: {result['expenses']:.2f}\n"
+                        f"Neto: {result['net']:.2f}"
+                    )
                 
                 elif report_type == 'cashflow':
                     monthly_data = result.get('monthly_data', [])
@@ -194,6 +373,8 @@ def query(
                         table.add_column("Neto", justify="right")
                         table.add_column("Balance", justify="right")
                         
+                        response_message += "\nDatos mensuales:"
+                        
                         for month in monthly_data:
                             table.add_row(
                                 month['month'],
@@ -202,11 +383,33 @@ def query(
                                 f"{month['net']:.2f}",
                                 f"{month['balance']:.2f}"
                             )
+                            
+                            response_message += f"\n{month['month']}: Ingresos {month['income']:.2f}, Gastos {month['expenses']:.2f}, Neto {month['net']:.2f}, Balance {month['balance']:.2f}"
                         
                         console.print(table)
                 
                 if 'summary' in result:
                     console.print(Panel(result['summary'], title="Resumen", border_style="blue"))
+                    response_message += f"\n\n{result['summary']}"
+                
+                # Añadir respuesta a la memoria
+                conversation_memory.add("assistant", response_message, {"intent": intent, "report_type": report_type})
+        
+        elif intent == 'recommendation':
+            # Handle recommendation queries
+            topic = parameters.get('topic', '')
+            
+            # Generate a response using the AI with conversation context
+            response = ai_engine.generate_response(
+                text, 
+                context={"topic": topic, "intent": "recommendation"}, 
+                conversation_history=conversation_context
+            )
+            
+            console.print(Panel(response, title="Recomendación", border_style="green"))
+            
+            # Añadir respuesta a la memoria
+            conversation_memory.add("assistant", response, {"intent": intent, "topic": topic})
         
         else:
             # General query or unknown intent
@@ -214,14 +417,20 @@ def query(
                 console.print("[yellow]Archivo adjunto detectado, pero la consulta no parece relacionada con procesamiento de documentos.[/yellow]")
                 console.print("¿Quieres procesar este documento? Intenta con un comando como: 'Procesa esta factura' o 'Analiza este documento'")
             
-            # Generate a response using the AI
-            response = ai_engine.generate_response(text)
+            # Generate a response using the AI with conversation context
+            response = ai_engine.generate_response(text, conversation_history=conversation_context)
             console.print(Panel(response, title="Respuesta", border_style="green"))
+            
+            # Añadir respuesta a la memoria
+            conversation_memory.add("assistant", response, {"intent": "general_query"})
     
     except Exception as e:
         logger.error(f"Error processing query: {e}")
         console.print(f"[bold red]Error:[/bold red] {str(e)}")
         console.print("[yellow]Intenta reformular tu consulta o comando.[/yellow]")
+        
+        # Añadir error a la memoria
+        conversation_memory.add("assistant", f"Error: {str(e)}", {"error": True})
 
 def _format_date(date_value) -> str:
     """Helper function to format dates consistently"""
@@ -281,3 +490,49 @@ def _display_document(document):
         title=f"Documento {document_data['id']}",
         border_style="blue"
     ))
+
+
+@app.command()
+def history(
+    limit: int = typer.Option(5, help="Número de interacciones a mostrar"),
+    clear: bool = typer.Option(False, help="Borrar historial de conversación")
+):
+    """
+    Muestra o borra el historial de conversación
+    """
+    global conversation_memory
+    
+    if clear:
+        conversation_memory.clear()
+        console.print("[bold green]Historial de conversación borrado[/bold green]")
+        return
+    
+    # Mostrar historial
+    history = conversation_memory.get_history(limit)
+    
+    if not history:
+        console.print("[yellow]No hay historial de conversación[/yellow]")
+        return
+    
+    console.print("[bold]Historial de Conversación:[/bold]")
+    
+    for i, entry in enumerate(history):
+        role = entry.get("role", "unknown")
+        content = entry.get("content", "")
+        timestamp = entry.get("timestamp", "")
+        
+        if timestamp:
+            try:
+                dt = datetime.fromisoformat(timestamp)
+                timestamp = dt.strftime("%Y-%m-%d %H:%M:%S")
+            except:
+                pass
+        
+        if role == "user":
+            console.print(f"[bold blue]{i+1}. Usuario[/bold blue] ({timestamp}):")
+            console.print(f"   {content}")
+        else:
+            console.print(f"[bold green]{i+1}. Asistente[/bold green] ({timestamp}):")
+            console.print(f"   {content}")
+        
+        console.print("")

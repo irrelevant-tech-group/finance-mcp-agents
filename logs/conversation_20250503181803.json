@@ -1,0 +1,20 @@
+{
+  "session_id": "20250503181803",
+  "history": [
+    {
+      "role": "user",
+      "content": "Busca todas las transacciones relacionadas con marketing",
+      "timestamp": "2025-05-03T18:18:03.765579",
+      "metadata": {}
+    },
+    {
+      "role": "assistant",
+      "content": "Error: 'AIEngine' object has no attribute 'analyze_financial_query'",
+      "timestamp": "2025-05-03T18:18:03.776001",
+      "metadata": {
+        "error": true
+      }
+    }
+  ],
+  "updated_at": "2025-05-03T18:18:03.777001"
+}

@@ -34,6 +34,15 @@ def test_command():
         result = ai_engine.process_text("Hola, soy un test", "Responde brevemente al usuario.")
         console.print(f"✓ Respuesta del AI Engine: {result[:50]}...")
         
+        # Test conversation memory
+        console.print("\n[yellow]Probando memoria de conversación...[/yellow]")
+        from core.conversation_memory import ConversationMemory
+        memory = ConversationMemory()
+        memory.add("user", "Hola, esto es una prueba")
+        memory.add("assistant", "Hola, soy el asistente financiero")
+        history = memory.get_history()
+        console.print(f"✓ Memoria de conversación: {len(history)} entradas")
+        
         # Test transaction creation
         console.print("\n[yellow]Probando creación de transacción...[/yellow]")
         from services.transaction_service import TransactionService
@@ -41,18 +50,17 @@ def test_command():
         result = tx_service.process_natural_language("Registra un gasto de prueba de $10 en categoría Test")
         console.print(f"✓ Transacción creada: {result}")
         
-        # Test financial analyzer
-        console.print("\n[yellow]Probando análisis financiero...[/yellow]")
-        from core.financial_analyzer import FinancialAnalyzer
-        analyzer = FinancialAnalyzer()
-        result = analyzer.calculate_runway(months_back=1)
-        console.print(f"✓ Análisis de runway completado")
+        # Test embeddings
+        console.print("\n[yellow]Probando generación de embeddings...[/yellow]")
+        from utils.embedding_utils import generate_embedding
+        embedding = generate_embedding("Prueba de embedding para búsqueda semántica")
+        console.print(f"✓ Embedding generado: {len(embedding)} dimensiones")
         
         # Test search engine
         console.print("\n[yellow]Probando motor de búsqueda...[/yellow]")
         from core.search_engine import SearchEngine
         search_engine = SearchEngine()
-        results = search_engine.search_transactions("prueba", limit=2)
+        results = search_engine.search_transactions("gastos de marketing", limit=2)
         console.print(f"✓ Búsqueda completada, {len(results)} resultados")
         
         console.print("\n[bold green]¡Todas las pruebas completadas exitosamente![/bold green]")
@@ -149,6 +157,9 @@ def hello(name: str = typer.Option("usuario", help="Tu nombre")):
     console.print("  - [italic]\"Configura un pago recurrente de $50 mensuales para Office 365\"[/italic]")
     console.print("\nPara procesar documentos, usa el comando [bold]financeai query[/bold] con --file:")
     console.print("  [italic]financeai query \"Procesa esta factura\" --file=documento.pdf[/italic]")
+    console.print("\nPara ver o borrar el historial de conversación:")
+    console.print("  [italic]financeai history[/italic] - muestra las últimas conversaciones")
+    console.print("  [italic]financeai history --clear[/italic] - borra el historial")
     logger.info(f"CLI iniciada y saludando a {name}")
 
 if __name__ == "__main__":

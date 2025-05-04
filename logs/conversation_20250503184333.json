@@ -1,0 +1,21 @@
+{
+  "session_id": "20250503184333",
+  "history": [
+    {
+      "role": "user",
+      "content": "¿Cuáles son mis mayores gastos?",
+      "timestamp": "2025-05-03T18:43:33.340281",
+      "metadata": {}
+    },
+    {
+      "role": "assistant",
+      "content": "Tipo de análisis no reconocido: category",
+      "timestamp": "2025-05-03T18:43:34.419535",
+      "metadata": {
+        "intent": "financial_analysis",
+        "warning": true
+      }
+    }
+  ],
+  "updated_at": "2025-05-03T18:43:34.419535"
+}

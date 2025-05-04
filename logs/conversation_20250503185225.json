@@ -1,0 +1,22 @@
+{
+  "session_id": "20250503185225",
+  "history": [
+    {
+      "role": "user",
+      "content": "Busca todas las transacciones relacionadas con marketing",
+      "timestamp": "2025-05-03T18:52:25.390687",
+      "metadata": {}
+    },
+    {
+      "role": "assistant",
+      "content": "Resultados de búsqueda: 1 transacciones encontradas\nSearch results found. Unable to generate detailed explanation.",
+      "timestamp": "2025-05-03T18:52:27.899443",
+      "metadata": {
+        "intent": "transaction_search",
+        "transaction_count": 1,
+        "search_explanation": "Search results found. Unable to generate detailed explanation."
+      }
+    }
+  ],
+  "updated_at": "2025-05-03T18:52:27.899443"
+}

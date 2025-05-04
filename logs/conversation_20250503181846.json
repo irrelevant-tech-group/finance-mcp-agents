@@ -1,0 +1,20 @@
+{
+  "session_id": "20250503181846",
+  "history": [
+    {
+      "role": "user",
+      "content": "¿Puedes sugerirme cómo reducir gastos en software?",
+      "timestamp": "2025-05-03T18:18:46.743839",
+      "metadata": {}
+    },
+    {
+      "role": "assistant",
+      "content": "Error: 'AIEngine' object has no attribute 'analyze_financial_query'",
+      "timestamp": "2025-05-03T18:18:46.760878",
+      "metadata": {
+        "error": true
+      }
+    }
+  ],
+  "updated_at": "2025-05-03T18:18:46.760878"
+}

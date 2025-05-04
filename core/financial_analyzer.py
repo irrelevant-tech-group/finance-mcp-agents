@@ -177,6 +177,46 @@ class FinancialAnalyzer:
             logger.error(f"Error performing category analysis: {e}")
             return {"error": str(e)}
     
+    def get_top_expenses(self, 
+                         period_start: Optional[datetime] = None,
+                         period_end: Optional[datetime] = None,
+                         limit: int = 5) -> Dict[str, Any]:
+        """
+        Get top expenses for analysis - specialized version of category analysis
+        
+        Args:
+            period_start: Start date for analysis
+            period_end: End date for analysis
+            limit: Maximum number of top expenses to return
+            
+        Returns:
+            Dictionary with top expenses analysis
+        """
+        try:
+            # Use category_analysis but ensure it's for expenses
+            result = self.category_analysis(
+                period_start=period_start,
+                period_end=period_end,
+                transaction_type="expense"
+            )
+            
+            # If there was an error, just return the error
+            if "error" in result:
+                return result
+            
+            # Limit to top expenses
+            if "categories" in result and len(result["categories"]) > limit:
+                result["categories"] = result["categories"][:limit]
+                
+            # Add descriptive field
+            result["description"] = f"Top {len(result['categories'])} expense categories"
+            
+            return result
+        
+        except Exception as e:
+            logger.error(f"Error fetching top expenses: {e}")
+            return {"error": str(e)}
+    
     def monthly_comparison(self, 
                           months_back: int = 12,
                           include_current_month: bool = True) -> Dict[str, Any]:

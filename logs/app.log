@@ -62,3 +62,71 @@ date
 2025-05-03 15:35:22,381 - finance-ai - INFO - Generando embedding simulado para uso de prueba
 2025-05-03 15:35:39,304 - finance-ai - INFO - Generando embedding simulado para uso de prueba
 2025-05-03 15:35:51,603 - finance-ai - INFO - Generando embedding simulado para uso de prueba
+2025-05-03 18:01:52,221 - finance-ai - INFO - Generando embedding simulado para uso de prueba
+2025-05-03 18:02:10,371 - finance-ai - INFO - Generando embedding simulado para uso de prueba
+2025-05-03 18:02:26,862 - finance-ai - INFO - Generando embedding simulado para uso de prueba
+2025-05-03 18:03:18,937 - finance-ai - ERROR - Error processing document: 'charmap' codec can't decode byte 0x81 in position 750: character maps to <undefined>
+2025-05-03 18:03:31,305 - finance-ai - INFO - Generando embedding simulado para uso de prueba
+2025-05-03 18:03:43,586 - finance-ai - INFO - Generando embedding simulado para uso de prueba
+2025-05-03 18:04:22,659 - finance-ai - INFO - Generando embedding simulado para uso de prueba
+2025-05-03 18:17:53,672 - finance-ai - ERROR - Error processing query: 'AIEngine' object has no attribute 'analyze_financial_query'
+2025-05-03 18:18:03,774 - finance-ai - ERROR - Error processing query: 'AIEngine' object has no attribute 'analyze_financial_query'
+2025-05-03 18:18:15,316 - finance-ai - ERROR - Error processing query: 'AIEngine' object has no attribute 'analyze_financial_query'
+2025-05-03 18:18:28,523 - finance-ai - ERROR - Error processing query: 'AIEngine' object has no attribute 'analyze_financial_query'
+2025-05-03 18:18:46,758 - finance-ai - ERROR - Error processing query: 'AIEngine' object has no attribute 'analyze_financial_query'
+2025-05-03 18:23:05,294 - finance-ai - INFO - Intent detectado: transaction_create, parámetros: {'type': 'expense', 'category': 'software', 'date': '2025-05-02', 'amount': 0}
+2025-05-03 18:23:07,070 - finance-ai - INFO - Generando embedding para texto: 'software Software expense...'
+2025-05-03 18:23:07,070 - finance-ai - ERROR - Error usando API de Anthropic para embeddings: 'Anthropic' object has no attribute 'embeddings'
+2025-05-03 18:23:07,071 - finance-ai - INFO - Usando método alternativo para generar embedding
+2025-05-03 18:23:07,071 - finance-ai - ERROR - Error generando embedding con TF-IDF: No module named 'sklearn'
+2025-05-03 18:23:07,072 - finance-ai - WARNING - Generando embedding determinista basado en hash
+2025-05-03 18:24:33,230 - finance-ai - INFO - Intent detectado: transaction_create, parámetros: {'type': 'expense', 'category': 'software', 'date': '2025-05-02', 'amount': 0}
+2025-05-03 18:24:34,424 - finance-ai - INFO - Generando embedding para texto: 'software Software expense...'
+2025-05-03 18:24:34,425 - finance-ai - INFO - Embedding generado usando método basado en hash
+2025-05-03 18:24:55,432 - finance-ai - INFO - Intent detectado: transaction_search, parámetros: {'category': 'marketing'}
+2025-05-03 18:24:56,325 - finance-ai - INFO - Buscando transacciones para la consulta: 'Busca todas las transacciones relacionadas con marketing'
+2025-05-03 18:24:56,931 - finance-ai - INFO - Encontradas 1 coincidencias exactas
+2025-05-03 18:24:56,931 - finance-ai - ERROR - Error generating search explanation: 'datetime.datetime' object is not subscriptable
+2025-05-03 18:39:47,689 - finance-ai - INFO - Intent detectado: general_query, parámetros: {'query': 'Registra un gasto de  en software pagado ayer'}
+2025-05-03 18:40:11,767 - finance-ai - INFO - Intent detectado: general_query, parámetros: {'query': 'Busca todas las transacciones relacionadas con marketing'}
+2025-05-03 18:42:24,438 - finance-ai - INFO - Análisis de consulta: {'intent': 'transaction_create', 'parameters': {'type': 'expense', 'amount': 500, 'category': 'Software', 'date': '2025-05-02'}}
+2025-05-03 18:42:24,438 - finance-ai - INFO - Intent detectado: transaction_create, parámetros: {'type': 'expense', 'amount': 500, 'category': 'Software', 'date': '2025-05-02'}
+2025-05-03 18:42:26,341 - finance-ai - INFO - Datos extraídos: {'type': 'expense', 'amount': 150, 'currency': 'USD', 'description': 'software', 'category': 'Software', 'date': '2025-05-02', 'payment_date': '2025-05-02', 'recurring': False, 'tags': {}}
+2025-05-03 18:42:27,049 - finance-ai - INFO - Generando embedding para texto: 'software Software expense...'
+2025-05-03 18:42:27,051 - finance-ai - INFO - Embedding generado usando método basado en hash
+2025-05-03 18:42:42,718 - finance-ai - INFO - Análisis de consulta: {'intent': 'transaction_search', 'parameters': {'category': 'Marketing'}}
+2025-05-03 18:42:42,718 - finance-ai - INFO - Intent detectado: transaction_search, parámetros: {'category': 'Marketing'}
+2025-05-03 18:42:43,552 - finance-ai - INFO - Análisis de consulta: {'intent': 'transaction_search', 'parameters': {'category': 'Marketing'}}
+2025-05-03 18:42:43,552 - finance-ai - INFO - Buscando transacciones para la consulta: 'Busca todas las transacciones relacionadas con marketing'
+2025-05-03 18:42:44,199 - finance-ai - INFO - Encontradas 1 coincidencias exactas
+2025-05-03 18:42:44,200 - finance-ai - ERROR - Error generating search explanation: 'datetime.datetime' object is not subscriptable
+2025-05-03 18:43:04,009 - finance-ai - INFO - Análisis de consulta: {'intent': 'recommendation', 'parameters': {'topic': 'software_cost_reduction', 'category': 'Software'}}
+2025-05-03 18:43:04,009 - finance-ai - INFO - Intent detectado: recommendation, parámetros: {'topic': 'software_cost_reduction', 'category': 'Software'}
+2025-05-03 18:43:34,417 - finance-ai - INFO - Análisis de consulta: {'intent': 'financial_analysis', 'parameters': {'analysis_type': 'category', 'period': 'current'}}
+2025-05-03 18:43:34,418 - finance-ai - INFO - Intent detectado: financial_analysis, parámetros: {'analysis_type': 'category', 'period': 'current'}
+2025-05-03 18:43:48,352 - finance-ai - INFO - Análisis de consulta: {'intent': 'recommendation', 'parameters': {'topic': 'cost_reduction', 'category': 'Marketing'}}
+2025-05-03 18:43:48,352 - finance-ai - INFO - Intent detectado: recommendation, parámetros: {'topic': 'cost_reduction', 'category': 'Marketing'}
+2025-05-03 18:52:12,241 - finance-ai - INFO - Análisis de consulta: {'intent': 'financial_analysis', 'parameters': {'analysis_type': 'category', 'period': 'current'}}
+2025-05-03 18:52:12,242 - finance-ai - INFO - Intent detectado: financial_analysis, parámetros: {'analysis_type': 'category', 'period': 'current'}
+2025-05-03 18:52:26,264 - finance-ai - INFO - Análisis de consulta: {'intent': 'transaction_search', 'parameters': {'category': 'Marketing'}}
+2025-05-03 18:52:26,266 - finance-ai - INFO - Intent detectado: transaction_search, parámetros: {'category': 'Marketing'}
+2025-05-03 18:52:27,049 - finance-ai - INFO - Análisis de consulta: {'intent': 'transaction_search', 'parameters': {'category': 'Marketing'}}
+2025-05-03 18:52:27,049 - finance-ai - INFO - Buscando transacciones para la consulta: 'Busca todas las transacciones relacionadas con marketing'
+2025-05-03 18:52:27,891 - finance-ai - INFO - Encontradas 1 coincidencias exactas
+2025-05-03 18:52:27,891 - finance-ai - ERROR - Error generating search explanation: 'datetime.datetime' object is not subscriptable
+2025-05-03 18:52:42,419 - finance-ai - INFO - Análisis de consulta: {'intent': 'financial_analysis', 'parameters': {'analysis_type': 'category', 'period': 'current'}}
+2025-05-03 18:52:42,419 - finance-ai - INFO - Intent detectado: financial_analysis, parámetros: {'analysis_type': 'category', 'period': 'current'}
+2025-05-03 18:52:56,962 - finance-ai - INFO - Análisis de consulta: {'intent': 'recommendation', 'parameters': {'topic': 'cost_reduction', 'category': 'Marketing'}}
+2025-05-03 18:52:56,963 - finance-ai - INFO - Intent detectado: recommendation, parámetros: {'topic': 'cost_reduction', 'category': 'Marketing'}
+2025-05-03 18:57:30,371 - finance-ai - INFO - Análisis de consulta: {'intent': 'financial_analysis', 'parameters': {'analysis_type': 'category', 'period': 'current'}}
+2025-05-03 18:57:30,371 - finance-ai - INFO - Intent detectado: financial_analysis, parámetros: {'analysis_type': 'category', 'period': 'current'}
+2025-05-03 18:58:14,726 - finance-ai - INFO - Análisis de consulta: {'intent': 'transaction_search', 'parameters': {'category': 'Marketing'}}
+2025-05-03 18:58:14,727 - finance-ai - INFO - Intent detectado: transaction_search, parámetros: {'category': 'Marketing'}
+2025-05-03 18:58:15,591 - finance-ai - INFO - Análisis de consulta: {'intent': 'transaction_search', 'parameters': {'category': 'Marketing'}}
+2025-05-03 18:58:15,592 - finance-ai - INFO - Buscando transacciones para la consulta: 'Busca todas las transacciones relacionadas con marketing'
+2025-05-03 18:58:16,004 - finance-ai - INFO - Encontradas 1 coincidencias exactas
+2025-05-03 18:58:16,004 - finance-ai - ERROR - Error generating search explanation: 'datetime.datetime' object is not subscriptable
+2025-05-03 18:58:52,114 - finance-ai - INFO - Análisis de consulta: {'intent': 'financial_analysis', 'parameters': {'analysis_type': 'category', 'period': 'current'}}
+2025-05-03 18:58:52,116 - finance-ai - INFO - Intent detectado: financial_analysis, parámetros: {'analysis_type': 'category', 'period': 'current'}
+2025-05-03 18:59:05,216 - finance-ai - INFO - Análisis de consulta: {'intent': 'recommendation', 'parameters': {'topic': 'cost_reduction', 'category': 'Marketing'}}
+2025-05-03 18:59:05,217 - finance-ai - INFO - Intent detectado: recommendation, parámetros: {'topic': 'cost_reduction', 'category': 'Marketing'}

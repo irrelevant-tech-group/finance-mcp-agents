@@ -1,0 +1,20 @@
+{
+  "session_id": "20250503181753",
+  "history": [
+    {
+      "role": "user",
+      "content": "Registra un gasto de  en software pagado ayer",
+      "timestamp": "2025-05-03T18:17:53.663707",
+      "metadata": {}
+    },
+    {
+      "role": "assistant",
+      "content": "Error: 'AIEngine' object has no attribute 'analyze_financial_query'",
+      "timestamp": "2025-05-03T18:17:53.675844",
+      "metadata": {
+        "error": true
+      }
+    }
+  ],
+  "updated_at": "2025-05-03T18:17:53.675844"
+}
